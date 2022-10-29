@@ -1,11 +1,12 @@
-# ✨🍃 Pybeaut
+# <p align="center">☄️ &nbsp;Pybeaut  ☄️</p>
+### <p align="center">_A python module to stylize terminal outputs._</p>
 
-**_A python module to stylize terminal outputs._**
 
-## What can i do with this module:
-[] - 
-[] -
-[] -
+## ✅ Module features:
+
+[x] - Fade effects 
+[x] -  Static & Dynamic colors
+[x] -
 [] -
 []
 
