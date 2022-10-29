@@ -2,13 +2,16 @@
 ### <p align="center">_A python module to stylize terminal outputs._</p>
 
 
-## ✅ Module features:
+# <p align="center">Module features</p>
 
-[x] - Fade effects 
-[x] -  Static & Dynamic colors
-[x] -
-[] -
-[]
+✅ -  Fade effects 
+
+✅ -  Static & Dynamic colors
+
+✅ -  Text boxes
+
+✅ -  Center Texts
+✅
 
 # PLEASE NOTE
 - This module does not intend to steal the credits for the creation of this module, only for personal non-atributive proyects.
