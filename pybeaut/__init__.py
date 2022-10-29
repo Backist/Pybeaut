@@ -1,25 +1,39 @@
 """
-PLEASE NOTE :
-This module does not intend to steal the credits for the creation of this module.
+=============================
+Pybeaut main module.
+=============================
 
-IMPORTANT --> Recently the Pystyle library has suffered an update that contains non-legitimate code and that can put at risk your computer and your data, that's why I have been forced, as a good action towards the community, to upload my own module renamed as "Pytui" to continue giving the service that Pystyle used to give.
+IMPORTANT
+=============
+Recently the Pystyle library has suffered an update that contains non-legitimate code and that can put at risk your computer and your data, that's why I have been forced, as a good action towards the community, to upload my own module renamed as "pybeaut" to continue giving the service that Pystyle used to give and free of attacks or injectors.
 
-Therefore, I upload this module attributing the rights to the following users:
-- Backest -
-- TheWisker -
+RIGHTS 
+=============
+- Backest
+- TheWisker 
+
+USE
+=============
+Same way as pystyle with other new features.
+
 
 PS: If you have any recommendations or new possible implementations of the module features, let us know through an issue in the official repository of the module or by posting a request in the official Pypi portal.
 
 Copyright Present Backist-TheWisker 2022-2023
-
 """
 # THIS VERSION OF PYSTYLE NOT CONTAIN A MALICIOUS VIRUS OR INJECTOR.
 # Made by Backest and TheWisker
 
-from os import name as _name, system as _system, get_terminal_size as _terminal_size, terminal_size
+
+
+from os import name as _name, system as _system, get_terminal_size as _terminal_size
 from sys import stdout as _stdout
 from time import sleep as _sleep
 from threading import Thread as _thread
+
+
+#__all__: list[str] = []
+
 
 
 if _name == 'nt':
