@@ -6,7 +6,8 @@
 
 - ✅ - Fade effects 
 - ✅ - Static & Dynamic colors
-- ✅ - Text boxes
+- ✅ - Colorate texts
+- ✅ - Pigeonhole texts | Texts boxes
 - ✅ - Center Texts & Text Alignments
 - ✅ - Banners
 - **_Other new features will be developing soon . . ._**  
