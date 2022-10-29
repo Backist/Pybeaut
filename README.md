@@ -1,4 +1,13 @@
-# Pybeaut
+# ✨🍃 Pybeaut
+
+**_A python module to stylize terminal outputs._**
+
+## What can i do with this module:
+[] - 
+[] -
+[] -
+[] -
+[]
 
 # PLEASE NOTE
 - This module does not intend to steal the credits for the creation of this module, only for personal non-atributive proyects.
