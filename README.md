@@ -24,5 +24,11 @@ ___
 ### Recommanations
 ``If you have any recommendations or new possible implementations of the module features, let us know through an issue in the official repository of the module or by posting a request in the official Pypi portal.``
 
-#### Copyright Present Backist-TheWisker 2022-2023
+### 👤Contributors & Owners:
+- **[@Backist](https://github.com/Backist/)**
+- **[@TheWisker](https://github.com/TheWisker/)**
+
+
+
+> Copyright Present Backist-TheWisker 2022-2023
 
