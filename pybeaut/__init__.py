@@ -390,6 +390,33 @@ class Colors:
         dark_red, dark_green, dark_blue,
         reset
     ]
+    
+    # NOT RECOMMENDED TO USE, use dot notation, strings are dangerous and unsafe!.
+    # Alternative way to access static colors by indexing it in a dict.
+    static_colors_mapping = {
+    "red": red,
+    "green": green,
+    "blue": blue,
+    "white": white,
+    "black": black,
+    "gray": gray,
+    "yellow": yellow,
+    "purple": purple,
+    "cyan": cyan,
+    "orange": orange,
+    "pink": pink,
+    "turquoise": turquoise,
+    "light_gray": light_gray,
+    "dark_gray": dark_gray,
+    "light_red": light_red,
+    "light_green": light_green,
+    "light_blue": light_blue,
+    "dark_red": dark_red,
+    "dark_green": dark_green,
+    "dark_blue": dark_blue,
+    "reset": reset
+    }
+
 
     all_colors = [color for color in dynamic_colors]
     for color in static_colors:
