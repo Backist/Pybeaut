@@ -1,91 +1,84 @@
 """
-=============================
+********************
 Pybeaut main module.
-=============================
+********************
 
-IMPORTANT
-=============
-Recently the Pystyle library has suffered an update that contains non-legitimate code and that can put at risk your computer and your data, that's why I have been forced, as a good action towards the community, to upload my own module renamed as "pybeaut" to continue giving the service that Pystyle used to give and free of attacks or injectors.
+Recently the Pystyle library has suffered an update that contains non-legitimate code 
+and that can put at risk your computer and your data, that's why I have been forced, 
+as a good action towards the community, to upload my own module renamed as "pybeaut" 
+to continue giving the service that Pystyle used to give and free of attacks or injectors.
 
-RIGHTS 
-=============
-- Backest
-- TheWisker 
-
-USE
-=============
-Same way as pystyle with other new features.
-
-
-PS: If you have any recommendations or new possible implementations of the module features, let us know through an issue in the official repository of the module or by posting a request in the official Pypi portal.
-
-Copyright Present Backist-TheWisker 2022-2023
+Pybeaut, originally by Pystyle.
+Copyright 2023-2024 Backist under license GPL 3.0
 """
-# THIS VERSION OF PYSTYLE NOT CONTAIN A MALICIOUS VIRUS OR INJECTOR.
-# Made by Backest and TheWisker
-
-
 
 from os import name as _name, system as _system, get_terminal_size as _terminal_size
 from sys import stdout as _stdout
 from time import sleep as _sleep
 from threading import Thread as _thread
 
-
-#__all__: list[str] = []
-
-
-
 if _name == 'nt':
     from ctypes import c_int, c_byte, Structure, byref, windll
 
     class _CursorInfo(Structure):
-        _fields_ = [("size", c_int),
-                    ("visible", c_byte)]
+        _fields_ = [("size", c_int), ("visible", c_byte)]
 
 
 class System:
-
     """
-    1 variable:
-        Windows      |      tells if the user is on Windows OS or not
-    5 functions:
-        Init()       |      initialize the terminal to allow the use of colors
-        Clear()      |      clear the terminal
-        Title()      |      set the title of terminal, only for Windows
-        Size()       |      set the size of terminal, only for Windows
-        Command()    |      enter a shell command
+    Clase para manejo del sistema y terminal.
+
+    Atributos:
+        Windows (bool)   |   Indica si el sistema operativo es Windows.
+    
+    Métodos estáticos:
+        Init()           |   Inicializa el terminal para permitir el uso de colores.
+        Clear()          |   Limpia la terminal.
+        Title()          |   Establece el título de la terminal (solo en Windows).
+        Size()           |   Ajusta el tamaño de la terminal (solo en Windows).
+        Command()        |   Ejecuta un comando de shell.
     """
 
     Windows = _name == 'nt'
 
+    @staticmethod
     def Init():
+        # En Windows, puede ser necesario inicializar el sistema con un comando vacío
         _system('')
 
+    @staticmethod
     def Clear():
+        # Limpia el terminal según el sistema operativo
         return _system("cls" if System.Windows else "clear")
 
+    @staticmethod
     def Title(title: str):
+        # Solo establece el título si estamos en Windows
         if System.Windows:
             return _system(f"title {title}")
 
+    @staticmethod
     def Size(x: int, y: int):
+        # Ajusta el tamaño del terminal en Windows
         if System.Windows:
-            return _system(f"mode {x}, {y}")
+            return _system(f"mode {x},{y}")
 
+    @staticmethod
     def Command(command: str):
+        # Ejecuta un comando de shell
         return _system(command)
 
 
-
 class Cursor:
-
     """
-    2 functions:
-        HideCursor()      |      hides the white blinking in the terminal
-        ShowCursor()      |      shows the white blinking in the terminal
+    Clase para manipulación del cursor en el terminal.
+
+    Métodos estáticos:
+        HideCursor()      |   Oculta el cursor en el terminal.
+        ShowCursor()      |   Muestra el cursor en el terminal.
     """
 
+    @staticmethod
     def HideCursor():
         if _name == 'nt':
             Cursor._cursor(False)
@@ -93,6 +86,7 @@ class Cursor:
             _stdout.write("\033[?25l")
             _stdout.flush()
 
+    @staticmethod
     def ShowCursor():
         if _name == 'nt':
             Cursor._cursor(True)
@@ -100,14 +94,16 @@ class Cursor:
             _stdout.write("\033[?25h")
             _stdout.flush()
 
-    """ ! developper area ! """
-
+    @staticmethod
     def _cursor(visible: bool):
+        # Función interna para manejar el cursor en Windows
         ci = _CursorInfo()
         handle = windll.kernel32.GetStdHandle(-11)
         windll.kernel32.GetConsoleCursorInfo(handle, byref(ci))
         ci.visible = visible
         windll.kernel32.SetConsoleCursorInfo(handle, byref(ci))
+
+
 
 
 class _MakeColors:
@@ -116,10 +112,12 @@ class _MakeColors:
 
     def _makeansi(col: str, text: str) -> str:
         return f"\033[38;2;{col}m{text}\033[38;2;255;255;255m"
-
+    
+    
     def _rmansi(col: str) -> str:
         return col.replace('\033[38;2;', '').replace('m','').replace('50m', '').replace('\x1b[38', '')
-
+    
+    
     def _makergbcol(var1: list, var2: list) -> list:
         col = list(var1[:12])
         for _col in var2[:12]:
@@ -127,20 +125,25 @@ class _MakeColors:
         for _col in reversed(col):
             col.append(_col)
         return col
-
+    
+    
     def _start(color: str) -> str:
         return f"\033[38;2;{color}m"
-
+    
+    
     def _end() -> str:
         return "\033[38;2;255;255;255m"
-
+    
+    
     def _maketext(color: str, text: str, end: bool = False) -> str:
         end = _MakeColors._end() if end else ""
         return color+text+end
-
+    
+    
     def _getspaces(text: str) -> int:
         return len(text) - len(text.lstrip())
-
+    
+    
     def _makerainbow(*colors) -> list:
         colors = [color[:24] for color in colors]
         rainbow = []
@@ -149,6 +152,7 @@ class _MakeColors:
                 rainbow.append(col)
         return rainbow
     
+
     def _reverse(colors: list) -> list:
         _colors = list(colors)
         for col in reversed(_colors):
@@ -166,6 +170,8 @@ class _MakeColors:
         fade7 = Colors.StaticMIX([fade1, fade2], _start=False)
         mixed = [col1, fade6, fade3, fade5, fade1, fade7, fade2, fade4, col2]
         return _MakeColors._reverse(colors=mixed) if _reverse else mixed 
+
+
 
 class Colors:
 
@@ -188,8 +194,10 @@ class Colors:
     def StaticRGB(r: int, g: int, b: int) -> str:
         return _MakeColors._start(f"{r};{g};{b}")
 
+
     def DynamicRGB(r1: int, g1: int, b1: int, r2: int,
                    g2: int, b2: int) -> list: ...
+
 
     def StaticMIX(colors: list, _start: bool = True) -> str:
         rgb = []
@@ -206,6 +214,7 @@ class Colors:
         rgb = f'{r};{g};{b}'
         return _MakeColors._start(rgb) if _start else rgb
 
+
     def DynamicMIX(colors: list):
         _colors = []
         for color in colors:
@@ -220,10 +229,9 @@ class Colors:
                 final.append(col)
         return _MakeColors._reverse(colors=final)
             
-
-
+            
     """ symbols """
-
+    
     def Symbol(symbol: str, col: str, col_left_right: str, left: str = '[', right: str = ']') -> str:
         return f"{col_left_right}{left}{col}{symbol}{col_left_right}{right}{Col.reset}"
 
@@ -394,29 +402,57 @@ class Colors:
     # NOT RECOMMENDED TO USE, use dot notation, strings are dangerous and unsafe!.
     # Alternative way to access static colors by indexing it in a dict.
     static_colors_mapping = {
-    "red": red,
-    "green": green,
-    "blue": blue,
-    "white": white,
-    "black": black,
-    "gray": gray,
-    "yellow": yellow,
-    "purple": purple,
-    "cyan": cyan,
-    "orange": orange,
-    "pink": pink,
-    "turquoise": turquoise,
-    "light_gray": light_gray,
-    "dark_gray": dark_gray,
-    "light_red": light_red,
-    "light_green": light_green,
-    "light_blue": light_blue,
-    "dark_red": dark_red,
-    "dark_green": dark_green,
-    "dark_blue": dark_blue,
-    "reset": reset
+        "red": red,
+        "green": green,
+        "blue": blue,
+        "white": white,
+        "black": black,
+        "gray": gray,
+        "yellow": yellow,
+        "purple": purple,
+        "cyan": cyan,
+        "orange": orange,
+        "pink": pink,
+        "turquoise": turquoise,
+        "light_gray": light_gray,
+        "dark_gray": dark_gray,
+        "light_red": light_red,
+        "light_green": light_green,
+        "light_blue": light_blue,
+        "dark_red": dark_red,
+        "dark_green": dark_green,
+        "dark_blue": dark_blue,
+        "reset": reset
     }
-
+    
+    dynamic_colors_mapping = {
+        'bw': black_to_white,
+        'br': black_to_red,
+        'bg': black_to_green,
+        'bb': black_to_blue,
+        'wb': white_to_black,
+        'wr': white_to_red,
+        'wg': white_to_green,
+        'wb': white_to_blue,
+        'rb': red_to_black,
+        'rw': red_to_white,
+        'ry': red_to_yellow,
+        'rp': red_to_purple,
+        'gb': green_to_black,
+        'gw': green_to_white,
+        'gy': green_to_yellow,
+        'gc': green_to_cyan,
+        'bb': blue_to_black,
+        'bw': blue_to_white,
+        'bc': blue_to_cyan,
+        'bp': blue_to_purple,
+        'yr': yellow_to_red,
+        'yg': yellow_to_green,
+        'pr': purple_to_red,
+        'pb': purple_to_blue,
+        'cg': cyan_to_green,
+        'cb': cyan_to_blue
+    }
 
     all_colors = [color for color in dynamic_colors]
     for color in static_colors:
@@ -565,7 +601,7 @@ class Colorate:
             result = result + '\n' + resultL
         return result.strip()
 
-    def Format(text: str, second_chars: list, mode, principal_col: Colors.col, second_col: str):
+    def Format(text: str, second_chars: list, mode, principal_col: Colors, second_col: str):
         if mode == Colorate.Vertical:
             ctext = mode(principal_col, text, fill=True)
         else:

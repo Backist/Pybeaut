@@ -8,21 +8,23 @@ build-backend = "hatchling.build"
 [project]
 authors = [
   {name = "Backest", email = "alvarodrumer54@gmail.com"}, 
-  {name= "TheWisker", email = "thewisker@protonmail.com"}
 ]
 maintainers = [
-  {name = "Backest", email = "alvarodrumer54@gmail.com"}
+  {name = "Backest", email = "alvarodrumer54@gmail.com"},
+  {name= "TheWisker", email = "thewisker@protonmail.com"}
 ]
 name = "pybeaut"
-description = "A python library for styling terminal outputs"
-version = "1.1"
+description = "A python library for styling terminal outputs."
+version = "1.1.1"
 readme = "README.md"
 requires-python = ">=3.10.8"
 classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+  "Environment :: Console",
+  "Development Status :: 4 - Beta",
   "Operating System :: Microsoft :: Windows :: Windows 10",
-  "Natural Language :: Spanish",
   "Typing :: Typed",
 ]
 
@@ -41,11 +43,10 @@ keywords = [
 
 [project.urls]
 "Author repository" = "https://github.com/Backist/"
-"Co-Author repository" = "https://github.com/TheWisker/"
 "repository" = "https://github.com/Backist/pybeaut"
 "Bug issues" = "https://github.com/Backist/pybeaut/issues" 
 
 
 [tool.mypy]
-python_version = "3.10.8"
+python_version = "3.11.3"
 strict = true

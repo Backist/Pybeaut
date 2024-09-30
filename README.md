@@ -25,11 +25,14 @@ ___
 ### Recommanations
 ``If you have any recommendations or new possible implementations of the module features, let us know through an issue in the official repository of the module or by posting a request in the official Pypi portal.``
 
-### 👤Contributors & Owners:
+
+### 👤 Owner:
 - **[@Backist](https://github.com/Backist/)**
+
+### 👤Contributors:
 - **[@TheWisker](https://github.com/TheWisker/)**
 
 
-
-> Copyright Present Backist-TheWisker 2022-2023
+> This project follows **[Semantic Versioning](https://semver.org/)**
+> Copyright Present Backist and Pybeaut Contributors 2022-2024.
 
