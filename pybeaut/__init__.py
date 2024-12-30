@@ -16,6 +16,7 @@ from os import name as _name, system as _system, get_terminal_size as _terminal_
 from sys import stdout as _stdout
 from time import sleep as _sleep
 from threading import Thread as _thread
+from typing import Iterable
 
 if _name == 'nt':
     from ctypes import c_int, c_byte, Structure, byref, windll
@@ -120,10 +121,10 @@ class _MakeColors:
     
     def _makergbcol(var1: list, var2: list) -> list:
         col = list(var1[:12])
-        for _col in var2[:12]:
-            col.append(_col)
-        for _col in reversed(col):
-            col.append(_col)
+        # Extend list with 24 new colors
+        col.extend(var2[:12])
+        col.extend(reversed(col))
+        
         return col
     
     
@@ -144,19 +145,17 @@ class _MakeColors:
         return len(text) - len(text.lstrip())
     
     
-    def _makerainbow(*colors) -> list:
-        colors = [color[:24] for color in colors]
+    def _makerainbow(*colors: Iterable) -> list:
+        colors = (color[:24] for color in colors)
         rainbow = []
         for color in colors:
-            for col in color:
-                rainbow.append(col)
+            rainbow.extend(color)
         return rainbow
     
 
     def _reverse(colors: list) -> list:
         _colors = list(colors)
-        for col in reversed(_colors):
-            colors.append(col)
+        colors.extend(reversed(_colors))
         return colors
     
     def _mixcolors(col1: str, col2: str, _reverse: bool = True) -> list:
@@ -204,9 +203,9 @@ class Colors:
         for col in colors:
             col = _MakeColors._rmansi(col=col)
             col = col.split(';')
-            r = int(int(col[0]))
-            g = int(int(col[1]))
-            b = int(int(col[2]))
+            r = int(col[0])
+            g = int(col[1])
+            b = int(col[2])
             rgb.append([r, g, b])
         r = round(sum(rgb[0] for rgb in rgb) / len(rgb))
         g = round(sum(rgb[1] for rgb in rgb) / len(rgb))
@@ -225,8 +224,7 @@ class Colors:
 
         final = []
         for col in colors:
-            for col in col:
-                final.append(col)
+            final.extend(col)
         return _MakeColors._reverse(colors=final)
             
             
@@ -384,7 +382,7 @@ class Colors:
         red_to_blue, red_to_green,
         green_to_blue, green_to_red,
         blue_to_red, blue_to_green
-    ): dynamic_colors.append(_col)
+    ): dynamic_colors.append(_col)  # noqa: E701
 
     dynamic_colors.append(rainbow)
 
@@ -433,7 +431,7 @@ class Colors:
         'wb': white_to_black,
         'wr': white_to_red,
         'wg': white_to_green,
-        'wb': white_to_blue,
+        'wbl': white_to_blue,
         'rb': red_to_black,
         'rw': red_to_white,
         'ry': red_to_yellow,
@@ -442,8 +440,8 @@ class Colors:
         'gw': green_to_white,
         'gy': green_to_yellow,
         'gc': green_to_cyan,
-        'bb': blue_to_black,
-        'bw': blue_to_white,
+        'blb': blue_to_black,
+        'blw': blue_to_white,
         'bc': blue_to_cyan,
         'bp': blue_to_purple,
         'yr': yellow_to_red,
@@ -628,42 +626,30 @@ class Anime:
         if hide_cursor:
             Cursor.HideCursor()
 
-        if type(time) == int:
+        if isinstance(time, int):
             time *= 15
 
         global passed
-        passed = False
-
         if enter:
             th = _thread(target=Anime._input)
             th.start()
 
         if time is True:
-            while True:
-                if passed is not False:
-                    break
+            passed = False
+
+            while not passed:
                 Anime._anime(text, color, mode, interval)
                 ncolor = color[1:]
                 ncolor.append(color[0])
                 color = ncolor
-
-        else:
-            for _ in range(time):
-                if passed is not False:
-                    break
-                Anime._anime(text, color, mode, interval)
-                ncolor = color[1:]
-                ncolor.append(color[0])
-                color = ncolor
-
-        if hide_cursor:
             Cursor.ShowCursor()
 
     def Move(text: str, color: list, time = True, interval = 0.01, hide_cursor: bool = True, enter: bool = False):
+        # sourcery skip: low-code-quality
         if hide_cursor:
             Cursor.HideCursor()
 
-        if type(time) == int:
+        if isinstance(time, int):
             time *= 15
 
         global passed
@@ -711,12 +697,10 @@ class Anime:
         if hide_cursor:
             Cursor.HideCursor()
 
-        if type(color) == list:
-            while not length <= len(color):
+        if isinstance(color, list):
+            while length > len(color):
                 ncolor = list(color)
-                for col in ncolor:
-                    color.append(col)
-
+                color.extend(ncolor)
         global passed
         passed = False
 
@@ -728,16 +712,15 @@ class Anime:
             bar = carac_1 * i + carac_0 * (length - i)
             if passed:
                 break
-            if type(color) == list:
+            if isinstance(color, list):
                 if center:
                     print(Center.XCenter(mode(color, bar)))
                 else:
                     print(mode(color, bar))
+            elif center:
+                print(Center.XCenter(color + bar))
             else:
-                if center:
-                    print(Center.XCenter(color + bar))
-                else:
-                    print(color + bar)
+                print(color + bar)
             _sleep(interval)
             System.Clear()
         if hide_cursor:
@@ -796,17 +779,17 @@ class Write:
 
     " ! developper area ! "
 
-    def _write(text: str, color, interval: int):
+    def _write(text: str, color: Iterable, interval: int):
         lines = list(text)
-        if type(color) == list:
-            while not len(lines) <= len(color):
+        if isinstance(color, list):
+            while len(lines) > len(color):
                 ncolor = list(color)
                 for col in ncolor:
                     color.append(col)
 
         n = 0
         for line in lines:
-            if type(color) == list:
+            if isinstance(color, list):
                 _stdout.write(_MakeColors._makeansi(color[n], line))
             else:
                 _stdout.write(color + line)
@@ -876,8 +859,7 @@ class Center:
         elif align == Center.left:
             return text
         elif align == Center.right:
-            ntext = '\n'.join(' ' * (mlen - len(lin)) + lin for lin in text.splitlines())
-            return ntext
+            return '\n'.join(' ' * (mlen - len(lin)) + lin for lin in text.splitlines())
         else:
             raise Center.BadAlignment()
 
@@ -995,34 +977,40 @@ class Banner:
     """
 
     def Box(content: str, up_left: str, up_right: str, down_left: str, down_right: str, left_line: str, up_line: str, right_line: str, down_line: str) -> str:
-        l = 0
+        long = 0
         lines = content.splitlines()
         for a in lines:
-            if len(a) > l:
-                l = len(a)
-        if l % 2 == 1:
-            l += 1
-        box = up_left + (up_line * l) + up_right + "\n"
+            if len(a) > long:
+                long = len(a)
+        if long % 2 == 1:
+            long += 1
+        box = up_left + (up_line * long) + up_right + "\n"
         #box += "║ " + (" " * int(l / 2)) + (" " * int(l / 2)) + " ║\n"
         for line in lines:
-            box += left_line + " " + line + (" " * int((l - len(line)))) + " " + right_line + "\n"
-        box += down_left + (down_line * l) + down_right + "\n"
+            box += (
+                f"{left_line} {line}"
+                + " " * int((long - len(line)))
+                + " "
+                + right_line
+                + "\n"
+            )
+        box += down_left + (down_line * long) + down_right + "\n"
         return box
 
 
     def SimpleCube(content: str) -> str:
-        l = 0
+        long = 0
         lines = content.splitlines()
         for a in lines:
-            if len(a) > l:
-                l = len(a)
-        if l % 2 == 1:
-            l += 1
-        box = "__" + ("_" * l) + "__\n"
-        box += "| " + (" " * int(l / 2)) + (" " * int(l / 2)) + " |\n"
+            if len(a) > long:
+                long = len(a)
+        if long % 2 == 1:
+            long += 1
+        box = "__" + ("_" * long) + "__\n"
+        box += "| " + (" " * int(long / 2)) + (" " * int(long / 2)) + " |\n"
         for line in lines:
-            box += "| " + line + (" " * int((l - len(line)))) + " |\n"
-        box += "|_" + ("_" * l) + "_|\n"
+            box += f"| {line}" + " " * int((long - len(line))) + " |\n"
+        box += "|_" + ("_" * long) + "_|\n"
 
         return box
 
@@ -1030,17 +1018,14 @@ class Banner:
         return Box.Box(content, "╔═", "═╗", "╚═", "═╝", "║", "═", "║", "═")
 
     def Lines(content: str, color = None, mode = Colorate.Horizontal, line = '═', pepite = 'ቐ') -> str:
-        l = 1
+        long = 1
         for c in content.splitlines():
-            if len(c) > l:
-                l = len(c)
+            if len(c) > long:
+                long = len(c)
         mode = Colorate.Horizontal if color is not None else (lambda **kw: kw['text'])
-        box = mode(text = f"─{line*l}{pepite * 2}{line*l}─", color = color)
+        box = mode(text = f"─{line*long}{pepite * 2}{line*long}─", color = color)
         assembly = box + "\n" + content + "\n" + box
-        final = ''
-        for lines in assembly.splitlines():
-            final += Center.XCenter(lines) + "\n"
-        return final
+        return ''.join(Center.XCenter(lines) + "\n" for lines in assembly.splitlines())
     
     def Arrow(icon: str = 'a', size: int = 2, number: int = 2, direction = 'right') -> str:
         spaces = ' ' * (size + 1)
@@ -1048,25 +1033,25 @@ class Banner:
         structure = (size + 2, [size * 2, size * 2])
         count = 0
         if direction == 'right':
-            for i in range(structure[1][0]):
+            for _ in range(structure[1][0]):
                 line = (structure[0] * icon)
                 _arrow += (' ' * count) + spaces.join([line] * (number)) + '\n'
                 count += 2
 
-            for i in range(structure[1][0] + 1):
+            for _ in range(structure[1][0] + 1):
                 line = (structure[0] * icon)
                 _arrow += (' ' * count) + spaces.join([line] * (number)) + '\n'
                 count -= 2
         elif direction == 'left':
-            for i in range(structure[1][0]):
+            for _ in range(structure[1][0]):
                 count += 2
 
-            for i in range(structure[1][0]):
+            for _ in range(structure[1][0]):
                 line = (structure[0] * icon)
                 _arrow += (' ' * count) + spaces.join([line] * (number)) + '\n'
                 count -= 2
 
-            for i in range(structure[1][0] + 1):
+            for _ in range(structure[1][0] + 1):
                 line = (structure[0] * icon)
                 _arrow += (' ' * count) + spaces.join([line] * (number)) + '\n'
                 count += 2
@@ -1075,4 +1060,7 @@ class Banner:
 
 Box = Banner
 
-System.Init()
+if __name__ == '__main__':
+    System.Init()
+
+    
