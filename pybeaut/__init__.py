@@ -501,37 +501,26 @@ class Colorate:
     def Vertical(color: list, text: str, speed: int = 1, start: int = 0, stop: int = 0, cut: int = 0, fill: bool = False) -> str:
         color = color[cut:]
         lines = text.splitlines()
+        n = len(lines)
+        color_end = stop if stop != 0 else len(color)
         result = ""
 
-        nstart = 0
-        color_n = 0
-        for lin in lines:
-            colorR = color[color_n]
-            if fill:
-                result += " " * \
-                    _MakeColors._getspaces(
-                        lin) + "".join(_MakeColors._makeansi(colorR, x) for x in lin.strip()) + "\n"
+        for i, lin in enumerate(lines):
+            # Distribute the full gradient evenly across all lines by default.
+            # When speed is set explicitly, step through colors by that amount.
+            if speed == 1:
+                color_n = int(i * (color_end - 1) / max(n - 1, 1))
             else:
-                result += " " * \
-                    _MakeColors._getspaces(
-                        lin) + _MakeColors._makeansi(colorR, lin.strip()) + "\n"  
+                color_n = min(start + i * speed, color_end - 1)
 
-            if nstart != start:
-                nstart += 1
-                continue
+            colorR = color[color_n]
+            spaces = " " * _MakeColors._getspaces(lin)
+            stripped = lin.strip()
 
-            if lin.rstrip():
-                if (
-                    stop == 0
-                    and color_n + speed < len(color)
-                    or stop != 0
-                    and color_n + speed < stop
-                ):
-                    color_n += speed
-                elif stop == 0:
-                    color_n = 0
-                else:
-                    color_n = stop
+            if fill:
+                result += spaces + "".join(_MakeColors._makeansi(colorR, x) for x in stripped) + "\n"
+            else:
+                result += spaces + _MakeColors._makeansi(colorR, stripped) + "\n"
 
         return result.rstrip()
 
@@ -1060,7 +1049,4 @@ class Banner:
 
 Box = Banner
 
-if __name__ == '__main__':
-    System.Init()
-
-    
+System.Init()
